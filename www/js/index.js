@@ -26,8 +26,75 @@ function onDeviceReady() {
 
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     //document.getElementById('deviceready').classList.add('ready');
+
+    var item = localStorage.getItem("item");
+    var array = [];
+    console.log(item);
+    if (item != null){
+        let datos = localStorage.getItem("dades");
+        array = datos.split(",");
+        for (i in array){
+        
+            let newelem = $("<li><a id = 'newElement' href =''>"+array[i]+'</a><button class ="delbutton">Delete</button></li>');
+            $("ul").append(newelem);
+        }
+
+        $(".delbutton").on("click", function(){
+            $(this).parent().remove();
+            const text = $(this).parent().text();
+            const text2 = text.slice(0, -6);
+            console.log(text + "//" + text2);
+            var myIndex = array.indexOf(text2);
+            if (myIndex !== -1) {
+              array.splice(myIndex, 1);
+          }
+          localStorage.setItem("dades", array);
+  
+          if (array.length == 0){
+              item = null;
+              localStorage.setItem("item", item);
+          }
+              
+          });
+
+        $(".ui-listview").listview("refresh");
+    }
     
+    console.log(array.values());
+
     $("#addbutton").click(function(){
-        alert("Boton clicked!!");
+        let text = $("#newtask").val();
+        let newelem = $("<li><a id = 'newElement' href =''>"+text+'</a><button class ="delbutton">Delete</button></li>');
+        $("ul").append(newelem);
+        array.push(text);
+        item = 1;
+        localStorage.setItem("item", item);
+        localStorage.setItem("dades", array);
+        //Actualitzem estils
+        $(".ui-listview").listview("refresh");
+        //alert("Boton clicked!!");
+
+        $(".delbutton").on("click", function(){
+          $(this).parent().remove();
+          const text = $(this).parent().text();
+          const text2 = text.slice(0, -6);
+          console.log(text + "//" + text2);
+          var myIndex = array.indexOf(text2);
+          if (myIndex !== -1) {
+            array.splice(myIndex, 1);
+        }
+        localStorage.setItem("dades", array);
+
+        if (array.length == 0){
+            item = null;
+            localStorage.setItem("item", item);
+        }
+            
+        });
+
+        
+
     });
+
+
 }
